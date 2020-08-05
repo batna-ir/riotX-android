@@ -48,7 +48,7 @@ import im.vector.riotx.features.rageshake.VectorUncaughtExceptionHandler
 import im.vector.riotx.features.settings.VectorPreferences
 import im.vector.riotx.features.workers.signout.ServerBackupStatusViewModel
 import im.vector.riotx.features.workers.signout.ServerBackupStatusViewState
-import im.vector.riotx.push.fcm.FcmHelper
+import ir.batna.messaging.fcm.FcmHelper
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.merge_overlay_waiting_view.*

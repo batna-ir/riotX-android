@@ -232,6 +232,20 @@ android {
             buildConfigField "String", "SHORT_FLAVOR_DESCRIPTION", "\"F\""
             buildConfigField "String", "FLAVOR_DESCRIPTION", "\"FDroid\""
         }
+
+        batna {
+            dimension "store"
+            versionName "${versionMajor}.${versionMinor}.${versionPatch}${getFdroidVersionSuffix()}"
+            applicationId "ir.batna.messaging"
+            versionCode 9905071
+            resValue "bool", "isGplay", "false"
+            buildConfigField "boolean", "IS_BATNA", "true"
+            buildConfigField "boolean", "ALLOW_HOME_SERVER_CHANGE", "false"
+            buildConfigField "boolean", "ALLOW_FCM_USE", "false"
+            buildConfigField "String", "SHORT_FLAVOR_DESCRIPTION", "\"B\""
+            buildConfigField "String", "FLAVOR_DESCRIPTION", "\"BATNA\""
+        }
+
     }
 
     lintOptions {

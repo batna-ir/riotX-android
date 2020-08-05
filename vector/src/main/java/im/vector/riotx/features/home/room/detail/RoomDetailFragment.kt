@@ -89,6 +89,7 @@ import im.vector.matrix.android.api.util.toMatrixItem
 import im.vector.matrix.android.internal.crypto.attachments.toElementToDecrypt
 import im.vector.matrix.android.internal.crypto.model.event.EncryptedEventContent
 import im.vector.matrix.android.internal.crypto.model.event.WithHeldCode
+import im.vector.riotx.BuildConfig
 import im.vector.riotx.R
 import im.vector.riotx.core.dialogs.ConfirmationDialogBuilder
 import im.vector.riotx.core.dialogs.withColoredButton
@@ -714,6 +715,12 @@ class RoomDetailFragment @Inject constructor(
         scrollOnHighlightedEventCallback = ScrollOnHighlightedEventCallback(recyclerView, layoutManager, timelineEventController)
         recyclerView.layoutManager = layoutManager
         recyclerView.itemAnimator = null
+        /**
+         * Batna => change background layout conversation
+         */
+        if (BuildConfig.IS_BATNA) {
+            recyclerView.background = context?.let { ContextCompat.getDrawable(it, R.drawable.background_main_conversation) }
+        }
         recyclerView.setHasFixedSize(true)
         modelBuildListener = OnModelBuildFinishedListener {
             it.dispatchTo(stateRestorer)

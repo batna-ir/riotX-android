@@ -35,7 +35,7 @@ import im.vector.riotx.core.platform.VectorBaseFragment
 import im.vector.riotx.features.rageshake.BugReporter
 import im.vector.riotx.features.settings.troubleshoot.NotificationTroubleshootTestManager
 import im.vector.riotx.features.settings.troubleshoot.TroubleshootTest
-import im.vector.riotx.push.fcm.NotificationTroubleshootTestManagerFactory
+import ir.batna.messaging.fcm.NotificationTroubleshootTestManagerFactory
 import javax.inject.Inject
 
 class VectorSettingsNotificationsTroubleshootFragment @Inject constructor(

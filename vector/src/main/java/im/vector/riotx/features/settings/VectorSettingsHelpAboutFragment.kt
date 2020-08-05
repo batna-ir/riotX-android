@@ -27,7 +27,7 @@ import im.vector.riotx.core.utils.copyToClipboard
 import im.vector.riotx.core.utils.displayInWebView
 import im.vector.riotx.core.utils.openUrlInChromeCustomTab
 import im.vector.riotx.features.version.VersionProvider
-import im.vector.riotx.openOssLicensesMenuActivity
+import ir.batna.messaging.openOssLicensesMenuActivity
 import javax.inject.Inject
 
 class VectorSettingsHelpAboutFragment @Inject constructor(

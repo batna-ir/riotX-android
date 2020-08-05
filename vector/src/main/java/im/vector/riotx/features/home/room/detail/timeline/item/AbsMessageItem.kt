@@ -16,9 +16,11 @@
 
 package im.vector.riotx.features.home.room.detail.timeline.item
 
+import android.annotation.SuppressLint
 import android.graphics.Typeface
 import android.view.View
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.IdRes
 import com.airbnb.epoxy.EpoxyAttribute
@@ -47,6 +49,7 @@ abstract class AbsMessageItem<H : AbsMessageItem.Holder> : AbsBaseMessageItem<H>
         attributes.avatarCallback?.onMemberNameClicked(attributes.informationData)
     })
 
+    @SuppressLint("WrongConstant")
     override fun bind(holder: H) {
         super.bind(holder)
         if (attributes.informationData.showInformation) {
@@ -90,6 +93,10 @@ abstract class AbsMessageItem<H : AbsMessageItem.Holder> : AbsBaseMessageItem<H>
         val avatarImageView by bind<ImageView>(R.id.messageAvatarImageView)
         val memberNameView by bind<TextView>(R.id.messageMemberNameView)
         val timeView by bind<TextView>(R.id.messageTimeView)
+        /**
+         * Btna =>find id layout for change layout Direction
+         */
+        val layoutItemTimeLineBase by bind<RelativeLayout>(R.id.layout_main_item_timeline_base)
     }
 
     /**

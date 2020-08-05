@@ -51,7 +51,7 @@ import im.vector.riotx.features.popup.PopupAlertManager
 import im.vector.riotx.features.rageshake.VectorUncaughtExceptionHandler
 import im.vector.riotx.features.settings.VectorPreferences
 import im.vector.riotx.features.version.VersionProvider
-import im.vector.riotx.push.fcm.FcmHelper
+import ir.batna.messaging.fcm.FcmHelper
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Date

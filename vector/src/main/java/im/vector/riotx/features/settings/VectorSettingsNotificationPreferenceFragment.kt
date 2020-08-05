@@ -33,7 +33,7 @@ import im.vector.riotx.core.preference.VectorPreference
 import im.vector.riotx.core.preference.VectorSwitchPreference
 import im.vector.riotx.core.pushers.PushersManager
 import im.vector.riotx.features.notifications.NotificationUtils
-import im.vector.riotx.push.fcm.FcmHelper
+import ir.batna.messaging.fcm.FcmHelper
 import javax.inject.Inject
 
 // Referenced in vector_settings_preferences_root.xml

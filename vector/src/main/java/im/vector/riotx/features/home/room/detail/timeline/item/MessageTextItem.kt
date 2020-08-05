@@ -16,12 +16,16 @@
 
 package im.vector.riotx.features.home.room.detail.timeline.item
 
+import android.annotation.SuppressLint
 import android.text.method.MovementMethod
+import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.text.PrecomputedTextCompat
+import androidx.core.view.ViewCompat
 import androidx.core.widget.TextViewCompat
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
+import im.vector.riotx.BuildConfig
 import im.vector.riotx.R
 import im.vector.riotx.features.home.room.detail.timeline.tools.findPillsAndProcess
 
@@ -37,6 +41,7 @@ abstract class MessageTextItem : AbsMessageItem<MessageTextItem.Holder>() {
     @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
     var movementMethod: MovementMethod? = null
 
+    @SuppressLint("WrongConstant")
     override fun bind(holder: Holder) {
         super.bind(holder)
         holder.messageView.movementMethod = movementMethod
@@ -56,6 +61,17 @@ abstract class MessageTextItem : AbsMessageItem<MessageTextItem.Holder>() {
                 TextViewCompat.getTextMetricsParams(holder.messageView),
                 null)
         holder.messageView.setTextFuture(textFuture)
+        /**
+         * Batna change layout direction
+         */
+        if (BuildConfig.IS_BATNA) {
+            if (attributes.informationData.sentByMe) {
+                holder.layoutItemTimeLineBase.layoutDirection = ViewCompat.LAYOUT_DIRECTION_RTL
+                holder.memberNameView.visibility = View.GONE
+            } else {
+                holder.layoutItemTimeLineBase.layoutDirection = ViewCompat.LAYOUT_DIRECTION_LTR
+            }
+        }
     }
 
     override fun getViewType() = STUB_ID
