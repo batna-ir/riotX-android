@@ -20,6 +20,7 @@ import android.annotation.SuppressLint
 import android.graphics.Typeface
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.IdRes
@@ -97,6 +98,7 @@ abstract class AbsMessageItem<H : AbsMessageItem.Holder> : AbsBaseMessageItem<H>
          * Btna =>find id layout for change layout Direction
          */
         val layoutItemTimeLineBase by bind<RelativeLayout>(R.id.layout_main_item_timeline_base)
+        val viewStubContainer by bind<LinearLayout>(R.id.viewStubContainer)
     }
 
     /**

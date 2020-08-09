@@ -56,7 +56,7 @@
         android:layout_marginBottom="4dp"
         android:layout_toEndOf="@id/messageStartGuideline"
         android:addStatesFromChildren="true"
-        android:background="@drawable/in_message_shape"
+        android:background="#007f7f7f"
         android:orientation="vertical">
 
         <TextView

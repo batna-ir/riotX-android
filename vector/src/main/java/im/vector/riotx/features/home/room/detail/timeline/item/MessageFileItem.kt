@@ -16,7 +16,9 @@
 
 package im.vector.riotx.features.home.room.detail.timeline.item
 
+import android.graphics.Color
 import android.graphics.Paint
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -25,6 +27,7 @@ import androidx.annotation.DrawableRes
 import androidx.core.view.isVisible
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
+import im.vector.riotx.BuildConfig
 import im.vector.riotx.R
 import im.vector.riotx.features.home.room.detail.timeline.helper.ContentDownloadStateTrackerBinder
 import im.vector.riotx.features.home.room.detail.timeline.helper.ContentUploadStateTrackerBinder
@@ -67,6 +70,14 @@ abstract class MessageFileItem : AbsMessageItem<MessageFileItem.Holder>() {
             holder.progressLayout.isVisible = false
         }
         holder.filenameView.text = filename
+        /**
+         * BATNA => Set text color file name
+         */
+        if (BuildConfig.IS_BATNA){
+            holder.filenameView.setTextColor(Color.BLACK)
+        }else{
+            holder.filenameView.setTextColor(Color.WHITE)
+        }
         if (attributes.informationData.sendState.isSending()) {
             holder.fileImageView.setImageResource(iconRes)
         } else {
@@ -86,6 +97,19 @@ abstract class MessageFileItem : AbsMessageItem<MessageFileItem.Holder>() {
         holder.fileImageWrapper.setOnClickListener(attributes.itemClickListener)
         holder.fileImageWrapper.setOnLongClickListener(attributes.itemLongClickListener)
         holder.filenameView.paintFlags = (holder.filenameView.paintFlags or Paint.UNDERLINE_TEXT_FLAG)
+        /**
+         * BATNA => Change layout direction and background via 'attributes.informationData.sentByMe'
+         */
+        if (BuildConfig.IS_BATNA) {
+            if (attributes.informationData.sentByMe) {
+                holder.layoutItemTimeLineBase.layoutDirection = View.LAYOUT_DIRECTION_RTL
+                holder.memberNameView.visibility = View.GONE
+                holder.viewStubContainer.setBackgroundResource(R.drawable.in_message_shape)
+            } else {
+                holder.layoutItemTimeLineBase.layoutDirection = View.LAYOUT_DIRECTION_LTR
+                holder.viewStubContainer.setBackgroundResource(R.drawable.out_message_shape)
+            }
+        }
     }
 
     override fun unbind(holder: Holder) {
