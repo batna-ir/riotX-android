@@ -68,8 +68,10 @@ abstract class MessageTextItem : AbsMessageItem<MessageTextItem.Holder>() {
             if (attributes.informationData.sentByMe) {
                 holder.layoutItemTimeLineBase.layoutDirection = ViewCompat.LAYOUT_DIRECTION_RTL
                 holder.memberNameView.visibility = View.GONE
+                holder.viewStubContainer.setBackgroundResource(R.drawable.in_message_shape)
             } else {
                 holder.layoutItemTimeLineBase.layoutDirection = ViewCompat.LAYOUT_DIRECTION_LTR
+                holder.viewStubContainer.setBackgroundResource(R.drawable.out_message_shape)
             }
         }
     }
