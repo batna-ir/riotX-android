@@ -30,6 +30,7 @@ import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.DrawableRes
@@ -111,6 +112,7 @@ import im.vector.riotx.core.ui.views.NotificationAreaView
 import im.vector.riotx.core.utils.Debouncer
 import im.vector.riotx.core.utils.KeyboardStateUtils
 import im.vector.riotx.core.utils.PERMISSIONS_FOR_AUDIO_IP_CALL
+import im.vector.riotx.core.utils.PERMISSIONS_FOR_RECORD
 import im.vector.riotx.core.utils.PERMISSIONS_FOR_VIDEO_IP_CALL
 import im.vector.riotx.core.utils.PERMISSIONS_FOR_WRITING_FILES
 import im.vector.riotx.core.utils.PERMISSION_REQUEST_CODE_INCOMING_URI
@@ -179,6 +181,7 @@ import im.vector.riotx.features.widgets.WidgetActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.parcel.Parcelize
+import kotlinx.android.synthetic.batna.constraint_set_composer_layout_compact.*
 import kotlinx.android.synthetic.main.fragment_room_detail.*
 import kotlinx.android.synthetic.main.merge_composer_layout.view.*
 import kotlinx.android.synthetic.main.merge_overlay_waiting_view.*
@@ -328,6 +331,7 @@ class RoomDetailFragment @Inject constructor(
                 is SendMode.REPLY   -> renderSpecialMode(mode.timelineEvent, R.drawable.ic_reply, R.string.reply, mode.text)
             }
         }
+        checkPermissions(PERMISSIONS_FOR_RECORD,this@RoomDetailFragment, AUDIO_CALL_PERMISSION_REQUEST_CODE)
 
         roomDetailViewModel.selectSubscribe(RoomDetailViewState::syncState) { syncState ->
             syncStateView.render(syncState)

@@ -28,6 +28,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import im.vector.riotx.R
+import im.vector.riotx.features.settings.VectorLocale.context
 import timber.log.Timber
 
 private const val LOG_TAG = "PermissionUtils"
@@ -46,6 +47,7 @@ private const val PERMISSION_READ_CONTACTS = 0x1 shl 3
 // Permissions sets
 const val PERMISSIONS_FOR_AUDIO_IP_CALL = PERMISSION_RECORD_AUDIO
 const val PERMISSIONS_FOR_VIDEO_IP_CALL = PERMISSION_CAMERA or PERMISSION_RECORD_AUDIO
+const val PERMISSIONS_FOR_RECORD = PERMISSION_RECORD_AUDIO
 const val PERMISSIONS_FOR_TAKING_PHOTO = PERMISSION_CAMERA or PERMISSION_WRITE_EXTERNAL_STORAGE
 const val PERMISSIONS_FOR_MEMBERS_SEARCH = PERMISSION_READ_CONTACTS
 const val PERMISSIONS_FOR_MEMBER_DETAILS = PERMISSION_READ_CONTACTS
