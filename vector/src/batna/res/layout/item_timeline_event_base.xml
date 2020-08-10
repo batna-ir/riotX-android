@@ -56,7 +56,6 @@
         android:layout_marginBottom="4dp"
         android:layout_toEndOf="@id/messageStartGuideline"
         android:addStatesFromChildren="true"
-        android:background="#007f7f7f"
         android:orientation="vertical">
 
         <TextView
@@ -135,7 +134,7 @@
             android:id="@+id/messageTimeView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
+            android:layout_gravity="start"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginEnd="8dp"

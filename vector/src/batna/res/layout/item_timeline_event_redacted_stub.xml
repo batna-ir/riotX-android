@@ -8,4 +8,10 @@
     android:text="@string/event_redacted"
     android:textColor="#000000"
     android:textSize="14sp"
-    app:drawableTint="?riotx_text_primary_body_contrast" />
+    android:background="@drawable/background_redacted_stub"
+    android:layout_margin="20dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:paddingStart="12dp"
+    android:paddingEnd="12dp"
+    app:drawableTint="#000000" />

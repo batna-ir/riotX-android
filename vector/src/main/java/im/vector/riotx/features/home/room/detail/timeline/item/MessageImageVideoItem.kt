@@ -23,6 +23,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
+import im.vector.riotx.BuildConfig
 import im.vector.riotx.R
 import im.vector.riotx.core.glide.GlideApp
 import im.vector.riotx.features.home.room.detail.timeline.helper.ContentUploadStateTrackerBinder
@@ -60,6 +61,18 @@ abstract class MessageImageVideoItem : AbsMessageItem<MessageImageVideoItem.Hold
         // The sending state color will be apply to the progress text
         renderSendState(holder.imageView, null, holder.failedToSendIndicator)
         holder.playContentView.visibility = if (playable) View.VISIBLE else View.GONE
+
+        /**
+         * BATNA => Change layout direction and background via 'attributes.informationData.sentByMe'
+         */
+        if (BuildConfig.IS_BATNA) {
+            if (attributes.informationData.sentByMe) {
+                holder.layoutItemTimeLineBase.layoutDirection = View.LAYOUT_DIRECTION_RTL
+                holder.memberNameView.visibility = View.GONE
+            } else {
+                holder.layoutItemTimeLineBase.layoutDirection = View.LAYOUT_DIRECTION_LTR
+            }
+        }
     }
 
     override fun unbind(holder: Holder) {
