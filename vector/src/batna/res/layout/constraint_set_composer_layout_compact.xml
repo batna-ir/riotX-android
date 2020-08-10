@@ -156,8 +156,9 @@
         android:tint="?attr/colorAccent"
 
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/mic"
-        app:layout_constraintStart_toStartOf="@+id/attachmentButton"/>
+        app:layout_constraintStart_toEndOf="@+id/attachmentButton"
+        app:layout_constraintEnd_toStartOf="@+id/mic"
+        />
 
     <ImageButton
         android:id="@+id/mic"
