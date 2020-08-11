@@ -181,7 +181,6 @@ import im.vector.riotx.features.widgets.WidgetActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.parcel.Parcelize
-import kotlinx.android.synthetic.batna.constraint_set_composer_layout_compact.*
 import kotlinx.android.synthetic.main.fragment_room_detail.*
 import kotlinx.android.synthetic.main.merge_composer_layout.view.*
 import kotlinx.android.synthetic.main.merge_overlay_waiting_view.*

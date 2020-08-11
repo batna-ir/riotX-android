@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootConstraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_main_conversation">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/roomToolbar"
+        style="@style/VectorToolbarStyle"
+        android:layout_width="0dp"
+        android:layout_height="?actionBarSize"
+        android:elevation="4dp"
+        android:transitionName="toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/roomToolbarContentView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/roomToolbarAvatarImageView"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@tools:sample/avatars" />
+
+            <ImageView
+                android:id="@+id/roomToolbarDecorationImageView"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:layout_constraintCircle="@+id/roomToolbarAvatarImageView"
+                app:layout_constraintCircleAngle="135"
+                app:layout_constraintCircleRadius="20dp"
+                tools:ignore="MissingConstraints"
+                tools:src="@drawable/ic_shield_trusted" />
+
+            <TextView
+                android:id="@+id/roomToolbarTitleView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="?vctr_toolbar_primary_text_color"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@+id/roomToolbarSubtitleView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/roomToolbarAvatarImageView"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@sample/matrix.json/data/roomName" />
+
+            <TextView
+                android:id="@+id/roomToolbarSubtitleView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="?vctr_toolbar_secondary_text_color"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/roomToolbarAvatarImageView"
+                app:layout_constraintTop_toBottomOf="@+id/roomToolbarTitleView"
+                tools:text="@sample/matrix.json/data/roomTopic" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/recyclerViewBarrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="top"
+        app:constraint_referenced_ids="composerLayout,notificationAreaView" />
+
+    <im.vector.riotx.features.sync.widget.SyncStateView
+        android:id="@+id/syncStateView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/roomToolbar" />
+
+    <im.vector.riotx.core.ui.views.ActiveCallView
+        android:id="@+id/activeCallView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/syncStateView"
+        tools:visibility="visible" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:overScrollMode="always"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerViewBarrier"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/activeCallView"
+        tools:listitem="@layout/item_timeline_event_base" />
+
+    <FrameLayout
+        android:id="@+id/bannersContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/activeCallView">
+
+        <im.vector.riotx.features.home.room.detail.widget.RoomWidgetsBannerView
+            android:id="@+id/roomWidgetsBannerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <im.vector.riotx.core.ui.views.JumpToReadMarkerView
+            android:id="@+id/jumpToReadMarkerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            tools:visibility="visible" />
+
+    </FrameLayout>
+
+    <im.vector.riotx.core.ui.views.NotificationAreaView
+        android:id="@+id/notificationAreaView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <im.vector.riotx.features.home.room.detail.composer.TextComposerView
+        android:id="@+id/composerLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/background_composer_layout"
+        android:transitionName="composer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/mic"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/mic"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="4dp"
+        android:background="@drawable/mic_circle_background"
+        android:src="@drawable/ic_mic"
+        android:tint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/composerLayout"/>
+
+    <im.vector.riotx.features.invite.VectorInviteView
+        android:id="@+id/inviteView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?riotx_background"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/roomToolbar"
+        tools:visibility="visible" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/badgeBarrier"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:barrierDirection="top"
+        app:constraint_referenced_ids="composerLayout,notificationAreaView" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/activeCallPiPWrap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/activeCallView">
+
+        <org.webrtc.SurfaceViewRenderer
+            android:id="@+id/activeCallPiP"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </androidx.cardview.widget.CardView>
+
+    <im.vector.riotx.core.platform.BadgeFloatingActionButton
+        android:id="@+id/jumpToBottomView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/a11y_jump_to_bottom"
+        android:src="@drawable/chevron_down"
+        app:backgroundTint="#FFFFFF"
+        app:badgeBackgroundColor="@color/riotx_accent"
+        app:badgeTextColor="@color/white"
+        app:badgeTextPadding="2dp"
+        app:badgeTextSize="10sp"
+        app:layout_constraintBottom_toTopOf="@id/badgeBarrier"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:maxImageSize="16dp"
+        app:tint="@color/black" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
