@@ -6,5 +6,5 @@
         android:bottomRightRadius="10dp"
         android:topLeftRadius="10dp"
         android:topRightRadius="10dp"/>
-    <solid android:color="#ffffff"/>
+    <solid android:color="?riotx_background"/>
 </shape>

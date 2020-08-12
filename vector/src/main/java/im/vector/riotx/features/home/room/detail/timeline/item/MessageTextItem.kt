@@ -17,6 +17,7 @@
 package im.vector.riotx.features.home.room.detail.timeline.item
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.text.method.MovementMethod
 import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
@@ -60,6 +61,12 @@ abstract class MessageTextItem : AbsMessageItem<MessageTextItem.Holder>() {
                 message ?: "",
                 TextViewCompat.getTextMetricsParams(holder.messageView),
                 null)
+        /**
+         * BATNA   ==> set static color text color --> textView message
+         */
+        if (BuildConfig.IS_BATNA) {
+            holder.messageView.setTextColor(Color.BLACK)
+        }
         holder.messageView.setTextFuture(textFuture)
         /**
          * Batna change layout direction

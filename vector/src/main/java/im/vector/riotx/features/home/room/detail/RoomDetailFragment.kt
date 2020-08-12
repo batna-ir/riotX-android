@@ -20,6 +20,7 @@ import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Build
@@ -330,7 +331,7 @@ class RoomDetailFragment @Inject constructor(
                 is SendMode.REPLY   -> renderSpecialMode(mode.timelineEvent, R.drawable.ic_reply, R.string.reply, mode.text)
             }
         }
-        checkPermissions(PERMISSIONS_FOR_RECORD,this@RoomDetailFragment, AUDIO_CALL_PERMISSION_REQUEST_CODE)
+        checkPermissions(PERMISSIONS_FOR_RECORD, this@RoomDetailFragment, AUDIO_CALL_PERMISSION_REQUEST_CODE)
 
         roomDetailViewModel.selectSubscribe(RoomDetailViewState::syncState) { syncState ->
             syncStateView.render(syncState)
@@ -722,7 +723,7 @@ class RoomDetailFragment @Inject constructor(
          * Batna => change background layout conversation
          */
         if (BuildConfig.IS_BATNA) {
-            recyclerView.background = context?.let { ContextCompat.getDrawable(it, R.drawable.background_main_conversation) }
+            recyclerView.setBackgroundColor(Color.TRANSPARENT)
         }
         recyclerView.setHasFixedSize(true)
         modelBuildListener = OnModelBuildFinishedListener {
