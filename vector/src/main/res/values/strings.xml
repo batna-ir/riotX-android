@@ -2393,6 +2393,8 @@ Not all features in Riot are implemented in Element yet. Main missing (and comin
     <string name="auth_invalid_login_deactivated_account">This account has been deactivated.</string>
 
     <string name="room_message_placeholder">Message…</string>
+    <string name="room_recording">Recording…</string>
+
 
     <string name="upgrade_security">Encryption upgrade available</string>
     <string name="setup_cross_signing">Enable Cross Signing</string>

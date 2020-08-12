@@ -20,7 +20,6 @@ import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Build
@@ -182,7 +181,31 @@ import im.vector.riotx.features.widgets.WidgetActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.parcel.Parcelize
-import kotlinx.android.synthetic.main.fragment_room_detail.*
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import android.os.Handler
+import android.media.MediaRecorder
+import android.content.res.ColorStateList
+import android.graphics.Color
+import kotlinx.android.synthetic.batna.fragment_room_detail.*
+import kotlinx.android.synthetic.main.fragment_room_detail.activeCallPiP
+import kotlinx.android.synthetic.main.fragment_room_detail.activeCallPiPWrap
+import kotlinx.android.synthetic.main.fragment_room_detail.activeCallView
+import kotlinx.android.synthetic.main.fragment_room_detail.inviteView
+import kotlinx.android.synthetic.main.fragment_room_detail.jumpToBottomView
+import kotlinx.android.synthetic.main.fragment_room_detail.jumpToReadMarkerView
+import kotlinx.android.synthetic.main.fragment_room_detail.notificationAreaView
+import kotlinx.android.synthetic.main.fragment_room_detail.recyclerView
+import kotlinx.android.synthetic.main.fragment_room_detail.roomToolbar
+import kotlinx.android.synthetic.main.fragment_room_detail.roomToolbarAvatarImageView
+import kotlinx.android.synthetic.main.fragment_room_detail.roomToolbarContentView
+import kotlinx.android.synthetic.main.fragment_room_detail.roomToolbarDecorationImageView
+import kotlinx.android.synthetic.main.fragment_room_detail.roomToolbarSubtitleView
+import kotlinx.android.synthetic.main.fragment_room_detail.roomToolbarTitleView
+import kotlinx.android.synthetic.main.fragment_room_detail.roomWidgetsBannerView
+import kotlinx.android.synthetic.main.fragment_room_detail.syncStateView
+import kotlinx.android.synthetic.main.merge_composer_layout.*
+import java.io.IOException
 import kotlinx.android.synthetic.main.merge_composer_layout.view.*
 import kotlinx.android.synthetic.main.merge_overlay_waiting_view.*
 import org.billcarsonfr.jsonviewer.JSonViewerDialog
@@ -202,7 +225,7 @@ data class RoomDetailArgs(
 
 private const val REACTION_SELECT_REQUEST_CODE = 0
 
-class RoomDetailFragment @Inject constructor(
+@Suppress("DEPRECATION", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS") class RoomDetailFragment @Inject constructor(
         private val session: Session,
         private val avatarRenderer: AvatarRenderer,
         private val timelineEventController: TimelineEventController,
@@ -282,8 +305,23 @@ class RoomDetailFragment @Inject constructor(
     private var lockSendButton = false
     private val activeCallViewHolder = ActiveCallViewHolder()
 
+    private var actionUp = false
+    private var output: String? = null
+    private var mediaRecorder: MediaRecorder? = null
+    private val mHandler = Handler()
+    private var state: Boolean = false
+    private var time = 0
+    private var hintColor: ColorStateList? = null
+
+    @SuppressLint("LogNotTimber")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (checkPermissions(PERMISSIONS_FOR_RECORD, this@RoomDetailFragment, AUDIO_CALL_PERMISSION_REQUEST_CODE)) {
+            output = context?.filesDir?.absolutePath + "/recording.aac"
+        }
+        hintColor = composerEditText.hintTextColors
+
         sharedActionViewModel = activityViewModelProvider.get(MessageSharedActionViewModel::class.java)
         sharedCallActionViewModel = activityViewModelProvider.get(SharedActiveCallViewModel::class.java)
         attachmentsHelper = AttachmentsHelper(requireContext(), this).register()
@@ -337,6 +375,43 @@ class RoomDetailFragment @Inject constructor(
             syncStateView.render(syncState)
         }
 
+        mic.setOnTouchListener(object : View.OnTouchListener {
+            @SuppressLint("LogNotTimber", "ClickableViewAccessibility")
+            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                val micButtonSize = 0.85f
+                val action = event?.action
+                if (MotionEvent.ACTION_DOWN == action) {
+                    if (checkPermissions(PERMISSIONS_FOR_RECORD, this@RoomDetailFragment, AUDIO_CALL_PERMISSION_REQUEST_CODE)) {
+                        output = context?.filesDir?.absolutePath + "/recording.aac"
+                        actionUp = true;
+
+                        time = 0
+                        mHandler.postDelayed(mAction, 0);
+                        sendButton.visibility = GONE
+                        attachmentButton.visibility = GONE
+                        mic.scaleX = mic.scaleX + micButtonSize
+                        mic.scaleY = mic.scaleY + micButtonSize
+                    }
+                }
+
+                if (MotionEvent.ACTION_UP == action) {
+                    if (checkPermissions(PERMISSIONS_FOR_RECORD, this@RoomDetailFragment, AUDIO_CALL_PERMISSION_REQUEST_CODE)) {
+                        time = 0
+                        actionUp = false;
+                        composerEditText.setHintTextColor(hintColor)
+                        composerEditText.setHint(R.string.room_message_placeholder)
+                        mic.scaleX = mic.scaleX - micButtonSize
+                        mic.scaleY = mic.scaleY - micButtonSize
+                        sendButton.visibility = VISIBLE
+                        attachmentButton.visibility = VISIBLE
+                        stopRecording()
+                    }
+                }
+                return true
+            }
+        })
+
+
         roomDetailViewModel.observeViewEvents {
             when (it) {
                 is RoomDetailViewEvents.Failure                          -> showErrorInSnackbar(it.throwable)
@@ -356,6 +431,47 @@ class RoomDetailFragment @Inject constructor(
                 is RoomDetailViewEvents.OpenIntegrationManager           -> openIntegrationManager()
                 is RoomDetailViewEvents.OpenFile                         -> startOpenFileIntent(it)
             }.exhaustive
+        }
+    }
+
+    var mAction: Runnable = object : Runnable {
+        @SuppressLint("LogNotTimber")
+        override fun run() {
+            if (actionUp) {
+                mHandler.postDelayed(this, 100);
+                if (time < 500) {
+                    time += 100;
+                } else {
+                    startRecording()
+                    actionUp = false;
+                }
+            }
+        }
+    }
+    private fun stopRecording(){
+        if(state){
+            mediaRecorder?.reset()
+            mediaRecorder?.release()
+            state = false
+        }else{
+        }
+    }
+    private fun startRecording() {
+        composerEditText.setHint(R.string.room_recording)
+        composerEditText.setHintTextColor(Color.argb(255, 230, 10, 10))
+        mediaRecorder = MediaRecorder()
+        mediaRecorder?.setAudioSource(MediaRecorder.AudioSource.MIC)
+        mediaRecorder?.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+        mediaRecorder?.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+        mediaRecorder?.setOutputFile(output)
+        try {
+            mediaRecorder?.prepare()
+            mediaRecorder?.start()
+            state = true
+        } catch (e: IllegalStateException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
     }
 
