@@ -749,4 +749,37 @@
     <string name="settings">تنظیمات</string>
     <string name="account_password">گذرواژه حساب</string>
 
+
+    <string name="login_splash_title">این مکالمه شماست. شمامالک آن هستید.</string>
+    <string name="login_splash_text1">با افراد مستقیم یا گروهی گپ بزنید.</string>
+    <string name="login_splash_text2">مکالمات خصوصی را با رمزگذاری محافظت کنید.</string>
+    <string name="login_splash_text3">تجربه خود را گسترش داده و شخصی سازی کنید.</string>
+    <string name="login_splash_submit">شروع </string>
+
+
+    <string name="login_server_title">سرور را انتخاب کنید</string>
+    <string name="login_server_text">درست مانند ایمیل ، حساب ها یک خانه دارند ، اگرچه می توانید با هر کسی صحبت کنید</string>
+    <string name="login_server_matrix_org_text">به میلیون ها نفر در بزرگترین سرور عمومی بپیوندید</string>
+    <string name="login_server_modular_text"> میزبانی تجاری برای سازمانها</string>
+    <string name="login_server_modular_learn_more">بیشتر </string>
+    <string name="login_server_other_title">سایر</string>
+
+    <string name="login_connect_using_matrix_id_submit">با شناسه ماتریس وارد سیستم شوید</string>
+    <string name="login_connect_to_a_custom_server">به یک سرور اختصاصی متصل شوید</string>
+    <string name="login_server_url_form_other_hint">آدرس</string>
+    <string name="login_server_url_form_common_notice">آدرس سرور مورد نظر خود را وارد کنید</string>
+    <string name="login_reset_password_warning_submit">ادامه</string>
+    <string name="login_connect_to">اتصال به %1$s</string>
+    <string name="login_signup">ثبت نام</string>
+    <string name="login_signin">ورود</string>
+
+    <string name="login_signin_username_hint">نام کاربری یا پست الکترونیک</string>
+    <string name="login_reset_password_on">بازنشانی رمز ورود %1$s</string>
+    <string name="login_reset_password_notice">برای تأیید تنظیم گذرواژه جدید ، یک ایمیل تأیید به صندوق پستی شما ارسال می شود.
+    <string name="login_reset_password_submit">بعد</string>
+    <string name="login_reset_password_email_hint">صندوق پستی</string>
+    <string name="login_set_email_mandatory_hint">صندوق پستی</string>
+    <string name="login_continue">ادامه</string>
+
+</string>
 </resources>
