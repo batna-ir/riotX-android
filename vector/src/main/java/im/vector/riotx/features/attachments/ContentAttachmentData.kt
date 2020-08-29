@@ -24,7 +24,7 @@ fun ContentAttachmentData.isPreviewable(): Boolean {
 
 data class GroupedContentAttachmentData(
         val previewables: List<ContentAttachmentData>,
-        val notPreviewables: List<ContentAttachmentData>
+        var notPreviewables: List<ContentAttachmentData>
 )
 
 fun List<ContentAttachmentData>.toGroupedContentAttachmentData(): GroupedContentAttachmentData {

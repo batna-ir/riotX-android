@@ -20,10 +20,14 @@ import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.Typeface
+import android.media.MediaRecorder
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.os.Parcelable
 import android.text.Spannable
 import android.view.HapticFeedbackConstants
@@ -32,6 +36,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -181,12 +187,6 @@ import im.vector.riotx.features.widgets.WidgetActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.parcel.Parcelize
-import android.view.View.GONE
-import android.view.View.VISIBLE
-import android.os.Handler
-import android.media.MediaRecorder
-import android.content.res.ColorStateList
-import android.graphics.Color
 import kotlinx.android.synthetic.batna.fragment_room_detail.*
 import kotlinx.android.synthetic.main.fragment_room_detail.activeCallPiP
 import kotlinx.android.synthetic.main.fragment_room_detail.activeCallPiPWrap
@@ -205,13 +205,13 @@ import kotlinx.android.synthetic.main.fragment_room_detail.roomToolbarTitleView
 import kotlinx.android.synthetic.main.fragment_room_detail.roomWidgetsBannerView
 import kotlinx.android.synthetic.main.fragment_room_detail.syncStateView
 import kotlinx.android.synthetic.main.merge_composer_layout.*
-import java.io.IOException
 import kotlinx.android.synthetic.main.merge_composer_layout.view.*
 import kotlinx.android.synthetic.main.merge_overlay_waiting_view.*
 import org.billcarsonfr.jsonviewer.JSonViewerDialog
 import org.commonmark.parser.Parser
 import timber.log.Timber
 import java.io.File
+import java.io.IOException
 import java.net.URL
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -384,7 +384,6 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
                     if (checkPermissions(PERMISSIONS_FOR_RECORD, this@RoomDetailFragment, AUDIO_CALL_PERMISSION_REQUEST_CODE)) {
                         output = context?.filesDir?.absolutePath + "/recording.aac"
                         actionUp = true;
-
                         time = 0
                         mHandler.postDelayed(mAction, 0);
                         sendButton.visibility = GONE
@@ -453,7 +452,11 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
             mediaRecorder?.reset()
             mediaRecorder?.release()
             state = false
-        }else{
+            val file = File(output)
+            roomDetailViewModel.handle(RoomDetailAction.SendMedia(listOf(ContentAttachmentData(file.length(),
+                    0, 0, 0, 0, 0,
+                    file.name,file.toUri(), "AUDIO", ContentAttachmentData.Type.AUDIO)),
+                    false))
         }
     }
     private fun startRecording() {
