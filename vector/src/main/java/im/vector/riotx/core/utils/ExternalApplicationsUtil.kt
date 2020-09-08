@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
+@file:Suppress("IMPLICIT_CAST_TO_ANY", "NAME_SHADOWING", "RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+
 package im.vector.riotx.core.utils
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.ActivityNotFoundException
@@ -40,6 +43,7 @@ import im.vector.matrix.android.api.extensions.tryThis
 import im.vector.riotx.BuildConfig
 import im.vector.riotx.R
 import im.vector.riotx.features.notifications.NotificationUtils
+import ir.batna.messaging.MediaPlayer.MediaPlayerBatna
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -310,7 +314,7 @@ fun shareMedia(context: Context, file: File, mediaMimeType: String?) {
 }
 
 fun saveMedia(context: Context, file: File, title: String, mediaMimeType: String?, notificationUtils: NotificationUtils) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !title.contains(".aac")) {
         val values = ContentValues().apply {
             put(MediaStore.Images.Media.TITLE, title)
             put(MediaStore.Images.Media.DISPLAY_NAME, title)
@@ -350,6 +354,7 @@ fun saveMedia(context: Context, file: File, title: String, mediaMimeType: String
     }
 }
 
+@SuppressLint("BinaryOperationInTimber")
 @Suppress("DEPRECATION")
 private fun saveMediaLegacy(context: Context, mediaMimeType: String?, title: String, file: File) {
     val state = Environment.getExternalStorageState()
@@ -365,7 +370,20 @@ private fun saveMediaLegacy(context: Context, mediaMimeType: String?, title: Str
             mediaMimeType?.startsWith("audio/") == true -> Environment.DIRECTORY_MUSIC
             else                                        -> Environment.DIRECTORY_DOWNLOADS
         }
-        val downloadDir = Environment.getExternalStoragePublicDirectory(dest)
+        var downloadDir = Environment.getExternalStoragePublicDirectory(dest)
+        if (BuildConfig.IS_BATNA) {
+            if (title.contains(".aac")) {
+                downloadDir = context.cacheDir
+                val file = File(context.cacheDir.path)
+                if (file.isDirectory) {
+                    for (i in file.list()) {
+                        if (File(downloadDir, i).name.contains(".aac")) {
+                            File(downloadDir, i).delete()
+                        }
+                    }
+                }
+            }
+        }
         try {
             val outputFilename = if (title.substringAfterLast('.', "").isEmpty()) {
                 val extension = mediaMimeType?.let { MimeTypeMap.getSingleton().getExtensionFromMimeType(it) }
@@ -391,6 +409,9 @@ private fun saveMediaLegacy(context: Context, mediaMimeType: String?, title: Str
                 context.toast(context.getString(R.string.error_saving_media_file))
             }
         }
+    }
+    if (BuildConfig.IS_BATNA) {
+        MediaPlayerBatna().startMediaPlayer(File(context.cacheDir.path + "/recording.aac"))
     }
 }
 

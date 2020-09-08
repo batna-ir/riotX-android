@@ -40,6 +40,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.Toast
 import androidx.annotation.DrawableRes
+import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -318,7 +319,7 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
         super.onViewCreated(view, savedInstanceState)
 
         if (checkPermissions(PERMISSIONS_FOR_RECORD, this@RoomDetailFragment, AUDIO_CALL_PERMISSION_REQUEST_CODE)) {
-            output = context?.filesDir?.absolutePath + "/recording.aac"
+            output = context?.filesDir?.absolutePath + "/recording"+".aac"
         }
         hintColor = composerEditText.hintTextColors
 
@@ -374,42 +375,43 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
         roomDetailViewModel.selectSubscribe(RoomDetailViewState::syncState) { syncState ->
             syncStateView.render(syncState)
         }
+        if (BuildConfig.IS_BATNA) {
 
-        mic.setOnTouchListener(object : View.OnTouchListener {
-            @SuppressLint("LogNotTimber", "ClickableViewAccessibility")
-            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-                val micButtonSize = 0.85f
-                val action = event?.action
-                if (MotionEvent.ACTION_DOWN == action) {
-                    if (checkPermissions(PERMISSIONS_FOR_RECORD, this@RoomDetailFragment, AUDIO_CALL_PERMISSION_REQUEST_CODE)) {
-                        output = context?.filesDir?.absolutePath + "/recording.aac"
-                        actionUp = true;
-                        time = 0
-                        mHandler.postDelayed(mAction, 0);
-                        sendButton.visibility = GONE
-                        attachmentButton.visibility = GONE
-                        mic.scaleX = mic.scaleX + micButtonSize
-                        mic.scaleY = mic.scaleY + micButtonSize
+            mic.setOnTouchListener(object : View.OnTouchListener {
+                @SuppressLint("LogNotTimber", "ClickableViewAccessibility")
+                override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                    val micButtonSize = 0.85f
+                    val action = event?.action
+                    if (MotionEvent.ACTION_DOWN == action) {
+                        if (checkPermissions(PERMISSIONS_FOR_RECORD, this@RoomDetailFragment, AUDIO_CALL_PERMISSION_REQUEST_CODE)) {
+                            output = context?.filesDir?.absolutePath + "/recording.aac"
+                            actionUp = true;
+                            time = 0
+                            mHandler.postDelayed(mAction, 0);
+                            sendButton.visibility = GONE
+                            attachmentButton.visibility = GONE
+                            mic.scaleX = mic.scaleX + micButtonSize
+                            mic.scaleY = mic.scaleY + micButtonSize
+                        }
                     }
-                }
 
-                if (MotionEvent.ACTION_UP == action) {
-                    if (checkPermissions(PERMISSIONS_FOR_RECORD, this@RoomDetailFragment, AUDIO_CALL_PERMISSION_REQUEST_CODE)) {
-                        time = 0
-                        actionUp = false;
-                        composerEditText.setHintTextColor(hintColor)
-                        composerEditText.setHint(R.string.room_message_placeholder)
-                        mic.scaleX = mic.scaleX - micButtonSize
-                        mic.scaleY = mic.scaleY - micButtonSize
-                        sendButton.visibility = VISIBLE
-                        attachmentButton.visibility = VISIBLE
-                        stopRecording()
+                    if (MotionEvent.ACTION_UP == action) {
+                        if (checkPermissions(PERMISSIONS_FOR_RECORD, this@RoomDetailFragment, AUDIO_CALL_PERMISSION_REQUEST_CODE)) {
+                            time = 0
+                            actionUp = false;
+                            composerEditText.setHintTextColor(hintColor)
+                            composerEditText.setHint(R.string.room_message_placeholder)
+                            mic.scaleX = mic.scaleX - micButtonSize
+                            mic.scaleY = mic.scaleY - micButtonSize
+                            sendButton.visibility = VISIBLE
+                            attachmentButton.visibility = VISIBLE
+                            stopRecording()
+                        }
                     }
+                    return true
                 }
-                return true
-            }
-        })
-
+            })
+        }
 
         roomDetailViewModel.observeViewEvents {
             when (it) {
@@ -465,7 +467,9 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
         mediaRecorder = MediaRecorder()
         mediaRecorder?.setAudioSource(MediaRecorder.AudioSource.MIC)
         mediaRecorder?.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-        mediaRecorder?.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+        mediaRecorder?.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB)
+        mediaRecorder?.setAudioEncodingBitRate(16 * 44100)
+        mediaRecorder?.setAudioSamplingRate(44100)
         mediaRecorder?.setOutputFile(output)
         try {
             mediaRecorder?.prepare()
@@ -1513,6 +1517,7 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
                 url = action.messageContent.getFileUrl(),
                 elementToDecrypt = action.messageContent.encryptedFileInfo?.toElementToDecrypt(),
                 callback = object : MatrixCallback<File> {
+                    @RequiresApi(Build.VERSION_CODES.Q)
                     override fun onSuccess(data: File) {
                         if (isAdded) {
                             saveMedia(

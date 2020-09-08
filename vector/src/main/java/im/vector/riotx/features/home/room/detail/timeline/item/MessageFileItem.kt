@@ -90,6 +90,13 @@ abstract class MessageFileItem : AbsMessageItem<MessageFileItem.Holder>() {
                 holder.fileDownloadProgress.progress = 0
             }
         }
+//        if (holder.filenameView.text.contains(".aac")){
+//            holder.fileImageView.setImageResource(R.drawable.play)
+//            holder.fileImageView.setOnClickListener {
+//                Timber.v("javaaad set on click"+mxcUrl)
+////                contentDownloadStateTrackerBinder.bind(mxcUrl, holder)
+//            }
+//        }
 //        holder.view.setOnClickListener(clickListener)
 
         holder.filenameView.setOnClickListener(attributes.itemClickListener)
