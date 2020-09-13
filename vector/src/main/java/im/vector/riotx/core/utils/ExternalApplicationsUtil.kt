@@ -44,6 +44,7 @@ import im.vector.riotx.BuildConfig
 import im.vector.riotx.R
 import im.vector.riotx.features.notifications.NotificationUtils
 import ir.batna.messaging.MediaPlayer.MediaPlayerBatna
+import ir.batna.messaging.MediaPlayer.MediaPlayerBatna.startMediaPlayer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -411,7 +412,20 @@ private fun saveMediaLegacy(context: Context, mediaMimeType: String?, title: Str
         }
     }
     if (BuildConfig.IS_BATNA) {
-        MediaPlayerBatna().startMediaPlayer(File(context.cacheDir.path + "/recording.aac"))
+        try {
+            if (MediaPlayerBatna.mp != null) {
+                MediaPlayerBatna.mp.release()
+                MediaPlayerBatna.mp = null
+                startMediaPlayer(File(context.cacheDir.path + "/recording.aac"), context)
+            } else if (MediaPlayerBatna.mp == null) {
+
+                startMediaPlayer(File(context.cacheDir.path + "/recording.aac"), context)
+            }
+        } catch (e: java.lang.Exception) {
+            MediaPlayerBatna.mp.release()
+            MediaPlayerBatna.mp = null
+        }
+
     }
 }
 

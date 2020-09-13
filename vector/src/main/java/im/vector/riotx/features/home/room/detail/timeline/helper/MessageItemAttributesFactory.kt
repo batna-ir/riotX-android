@@ -17,6 +17,7 @@
  */
 package im.vector.riotx.features.home.room.detail.timeline.helper
 
+import android.annotation.SuppressLint
 import android.view.View
 import im.vector.riotx.EmojiCompatFontProvider
 import im.vector.riotx.core.utils.DebouncedClickListener
@@ -33,6 +34,7 @@ class MessageItemAttributesFactory @Inject constructor(
         private val avatarSizeProvider: AvatarSizeProvider,
         private val emojiCompatFontProvider: EmojiCompatFontProvider) {
 
+    @SuppressLint("BinaryOperationInTimber")
     fun create(messageContent: Any?,
                informationData: MessageInformationData,
                callback: TimelineEventController.Callback?): AbsMessageItem.Attributes {

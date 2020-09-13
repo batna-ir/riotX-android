@@ -16,6 +16,7 @@
 
 package im.vector.riotx.features.home.room.detail.timeline.item
 
+import android.annotation.SuppressLint
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -52,6 +53,7 @@ abstract class AbsBaseMessageItem<H : AbsBaseMessageItem.Holder> : BaseEventItem
             baseAttributes.reactionPillCallback?.onClickOnReactionPill(baseAttributes.informationData, reactionButton.reactionString, false)
         }
 
+        @SuppressLint("BinaryOperationInTimber")
         override fun onLongClick(reactionButton: ReactionButton) {
             baseAttributes.reactionPillCallback?.onLongClickOnReactionPill(baseAttributes.informationData, reactionButton.reactionString)
         }

@@ -78,6 +78,7 @@ import im.vector.matrix.android.api.session.events.model.toModel
 import im.vector.matrix.android.api.session.file.FileService
 import im.vector.matrix.android.api.session.room.model.Membership
 import im.vector.matrix.android.api.session.room.model.RoomSummary
+import im.vector.matrix.android.api.session.room.model.message.MessageAudioContent
 import im.vector.matrix.android.api.session.room.model.message.MessageContent
 import im.vector.matrix.android.api.session.room.model.message.MessageFormat
 import im.vector.matrix.android.api.session.room.model.message.MessageImageInfoContent
@@ -187,6 +188,7 @@ import im.vector.riotx.features.themes.ThemeUtils
 import im.vector.riotx.features.widgets.WidgetActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import ir.batna.messaging.MediaPlayer.MediaPlayerBatna
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.batna.fragment_room_detail.*
 import kotlinx.android.synthetic.main.fragment_room_detail.activeCallPiP
@@ -226,7 +228,7 @@ data class RoomDetailArgs(
 
 private const val REACTION_SELECT_REQUEST_CODE = 0
 
-@Suppress("DEPRECATION", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS") class RoomDetailFragment @Inject constructor(
+@Suppress("DEPRECATION", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "RecursivePropertyAccessor") class RoomDetailFragment @Inject constructor(
         private val session: Session,
         private val avatarRenderer: AvatarRenderer,
         private val timelineEventController: TimelineEventController,
@@ -317,6 +319,8 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
     @SuppressLint("LogNotTimber")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        MediaPlayerBatna().layout=play_layout
+
 
         if (checkPermissions(PERMISSIONS_FOR_RECORD, this@RoomDetailFragment, AUDIO_CALL_PERMISSION_REQUEST_CODE)) {
             output = context?.filesDir?.absolutePath + "/recording"+".aac"
@@ -1331,18 +1335,6 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
         }
     }
 
-//    override fun onFileMessageClicked(eventId: String, messageFileContent: MessageFileContent) {
-//        val isEncrypted = messageFileContent.encryptedFileInfo != null
-//        val action = RoomDetailAction.DownloadOrOpen(eventId, messageFileContent, isEncrypted)
-//        // We need WRITE_EXTERNAL permission
-// //        if (!isEncrypted || checkPermissions(PERMISSIONS_FOR_WRITING_FILES, this, PERMISSION_REQUEST_CODE_DOWNLOAD_FILE)) {
-//            showSnackWithMessage(getString(R.string.downloading_file, messageFileContent.getFileName()))
-//            roomDetailViewModel.handle(action)
-// //        } else {
-// //            roomDetailViewModel.pendingAction = action
-// //        }
-//    }
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (allGranted(grantResults)) {
             when (requestCode) {
@@ -1399,17 +1391,30 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
         roomDetailViewModel.handle(RoomDetailAction.LoadMoreTimelineEvents(direction))
     }
 
+    @SuppressLint("BinaryOperationInTimber")
     override fun onEventCellClicked(informationData: MessageInformationData, messageContent: Any?, view: View) {
         when (messageContent) {
             is MessageVerificationRequestContent -> {
                 roomDetailViewModel.handle(RoomDetailAction.ResumeVerification(informationData.eventId, null))
             }
             is MessageWithAttachmentContent      -> {
+                if(BuildConfig.IS_BATNA){
+                if(!(messageContent as MessageAudioContent).body.contains(".aac")){
                 val action = RoomDetailAction.DownloadOrOpen(informationData.eventId, messageContent)
-                roomDetailViewModel.handle(action)
+                roomDetailViewModel.handle(action)}
+                }
+                if(!BuildConfig.IS_BATNA){
+                        val action = RoomDetailAction.DownloadOrOpen(informationData.eventId, messageContent)
+                        roomDetailViewModel.handle(action)
+                }
             }
             is EncryptedEventContent             -> {
                 roomDetailViewModel.handle(RoomDetailAction.TapOnFailedToDecrypt(informationData.eventId))
+            }
+        }
+        if (BuildConfig.IS_BATNA) {
+            if ((messageContent as MessageAudioContent).body.contains(".aac")) {
+                onSaveActionClicked(EventSharedAction.Save(informationData.eventId, messageContent))
             }
         }
     }
@@ -1503,6 +1508,7 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
         )
     }
 
+    @SuppressLint("BinaryOperationInTimber")
     private fun onSaveActionClicked(action: EventSharedAction.Save) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
                 && !checkPermissions(PERMISSIONS_FOR_WRITING_FILES, this, SAVE_ATTACHEMENT_REQUEST_CODE)) {
@@ -1533,6 +1539,7 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
         )
     }
 
+    @SuppressLint("BinaryOperationInTimber")
     private fun handleActions(action: EventSharedAction) {
         when (action) {
             is EventSharedAction.OpenUserProfile            -> {
