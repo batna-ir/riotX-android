@@ -16,10 +16,15 @@
 
 package ir.batna.messaging.MediaPlayer;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Handler;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -27,62 +32,112 @@ import java.io.File;
 
 public class MediaPlayerBatna {
     public static MediaPlayer mp;
+    @SuppressLint("StaticFieldLeak")
     @Nullable
-    public LinearLayout layout;
-
+    public static LinearLayout layout;
+    @SuppressLint("StaticFieldLeak")
+    @Nullable
+    public static SeekBar seekBar;
+    @SuppressLint("StaticFieldLeak")
+    @Nullable
+    public static ImageView pause;
+    @SuppressLint("StaticFieldLeak")
+    @Nullable
+    public static ImageView play;
+    @SuppressLint("StaticFieldLeak")
+    @Nullable
+    public static ImageView close;
+    private static Handler myHandler = new Handler();
+    private static boolean isRemainderVoice = true;
+    private static Runnable UpdateVoiceTime = new Runnable() {
+        public void run() {
+            try {
+                int startTime = mp.getCurrentPosition();
+                seekBar.setProgress(startTime);
+                if (isRemainderVoice)
+                    myHandler.postDelayed(this, 100);
+            } catch (Exception e) {
+                isRemainderVoice=false;
+            }
+        }
+    };
 
     public static void startMediaPlayer(File file, Context context) {
         try {
-//            mp.release();
+            assert pause != null;
+            pause.setVisibility(View.VISIBLE);
+            assert play != null;
+            play.setVisibility(View.GONE);
             mp = null;
             mp = MediaPlayer.create(context, Uri.parse(file.getPath()));
             mp.start();
+            isRemainderVoice = true;
+            assert seekBar != null;
+            seekBar.setMax(mp.getDuration());
+            myHandler.postDelayed(UpdateVoiceTime, 100);
+
+            assert layout != null;
+            layout.setVisibility(View.VISIBLE);
+
             mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
-//                    mp.stop();
                     mp.release();
                     mp = null;
+                    isRemainderVoice = false;
+                    assert layout != null;
+                    layout.setVisibility(View.GONE);
                 }
             });
         } catch (Exception e) {
             mp.release();
             mp = null;
         }
+        assert close != null;
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                assert layout != null;
+                layout.setVisibility(View.GONE);
+                mp.release();
+                mp = null;
+            }
+        });
+        assert pause != null;
+        pause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mp.pause();
+                assert play != null;
+                play.setVisibility(View.VISIBLE);
+                pause.setVisibility(View.GONE);
+            }
+        });
+        assert play != null;
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mp.start();
+                pause.setVisibility(View.VISIBLE);
+                play.setVisibility(View.GONE);
+            }
+        });
+        assert seekBar != null;
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser)
+                    mp.seekTo(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
     }
 }
-
-//        mediaPlayer.setDataSource(context,context.cacheDir.path + "/recording.aac").toUri();
-//        mediaPlayer.release();
-//        mediaPlayer = MediaPlayer.create(context, Uri.parse(file.getPath()));
-//        mediaPlayer.setDataSource(file.getPath());
-//                if (mediaPlayer == null) {
-////                    mediaPlayer = MediaPlayer.create(context, file.toUri())
-//
-//
-//                    mediaPlayer?.start()
-//                    mediaPlayer?.setOnCompletionListener(MediaPlayer.OnCompletionListener {
-////            layout.visibility = View.GONE
-//                        mediaPlayer?.reset()
-//                        mediaPlayer?.release()
-//                    })
-//                }
-//               else {
-//            if (mediaPlayer.isPlaying()) {
-//                mediaPlayer.stop();
-//                mediaPlayer.reset();
-//                mediaPlayer.release();
-//            }
-//                }
-//                mediaPlayer.setDataSource(file.path)
-//        layout.visibility = View.VISIBLE
-//        mediaPlayer.start();
-//        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//            @Override
-//            public void onCompletion(MediaPlayer mp) {
-//                mediaPlayer.reset();
-//                mediaPlayer.release();
-//            }
-//        });
-
-

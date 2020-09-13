@@ -416,13 +416,11 @@ private fun saveMediaLegacy(context: Context, mediaMimeType: String?, title: Str
             if (MediaPlayerBatna.mp != null) {
                 MediaPlayerBatna.mp.release()
                 MediaPlayerBatna.mp = null
-                startMediaPlayer(File(context.cacheDir.path + "/recording.aac"), context)
+                startMediaPlayer(File(context.cacheDir.path + "/"+title), context)
             } else if (MediaPlayerBatna.mp == null) {
-
-                startMediaPlayer(File(context.cacheDir.path + "/recording.aac"), context)
+                startMediaPlayer(File(context.cacheDir.path + "/"+title), context)
             }
         } catch (e: java.lang.Exception) {
-            MediaPlayerBatna.mp.release()
             MediaPlayerBatna.mp = null
         }
 

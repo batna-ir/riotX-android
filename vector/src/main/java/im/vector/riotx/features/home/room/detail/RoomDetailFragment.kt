@@ -319,8 +319,11 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
     @SuppressLint("LogNotTimber")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        MediaPlayerBatna().layout=play_layout
-
+        MediaPlayerBatna.layout=play_layout
+        MediaPlayerBatna.seekBar=seekBar
+        MediaPlayerBatna.close=close
+        MediaPlayerBatna.pause=pause
+        MediaPlayerBatna.play=play
 
         if (checkPermissions(PERMISSIONS_FOR_RECORD, this@RoomDetailFragment, AUDIO_CALL_PERMISSION_REQUEST_CODE)) {
             output = context?.filesDir?.absolutePath + "/recording"+".aac"
