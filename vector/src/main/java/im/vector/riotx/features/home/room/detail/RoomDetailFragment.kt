@@ -216,6 +216,8 @@ import timber.log.Timber
 import java.io.File
 import java.io.IOException
 import java.net.URL
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -316,7 +318,8 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
     private var time = 0
     private var hintColor: ColorStateList? = null
 
-    @SuppressLint("LogNotTimber")
+    @RequiresApi(Build.VERSION_CODES.O)
+    @SuppressLint("LogNotTimber", "SimpleDateFormat")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         MediaPlayerBatna.layout=play_layout
@@ -325,8 +328,11 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
         MediaPlayerBatna.pause=pause
         MediaPlayerBatna.play=play
 
+        val current = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss")
+        val currentDate: String =  current.format(formatter)
         if (checkPermissions(PERMISSIONS_FOR_RECORD, this@RoomDetailFragment, AUDIO_CALL_PERMISSION_REQUEST_CODE)) {
-            output = context?.filesDir?.absolutePath + "/recording"+".aac"
+            output = context?.filesDir?.absolutePath + "/recording"+currentDate+".aac"
         }
         hintColor = composerEditText.hintTextColors
 
@@ -391,7 +397,7 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
                     val action = event?.action
                     if (MotionEvent.ACTION_DOWN == action) {
                         if (checkPermissions(PERMISSIONS_FOR_RECORD, this@RoomDetailFragment, AUDIO_CALL_PERMISSION_REQUEST_CODE)) {
-                            output = context?.filesDir?.absolutePath + "/recording.aac"
+                            output = context?.filesDir?.absolutePath + "/recording"+currentDate+".aac"
                             actionUp = true;
                             time = 0
                             mHandler.postDelayed(mAction, 0);
