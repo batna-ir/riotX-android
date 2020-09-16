@@ -38,6 +38,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
@@ -191,6 +193,7 @@ import io.reactivex.schedulers.Schedulers
 import ir.batna.messaging.MediaPlayer.MediaPlayerBatna
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.batna.fragment_room_detail.*
+import kotlinx.android.synthetic.batna.item_timeline_event_file_stub.view.*
 import kotlinx.android.synthetic.main.fragment_room_detail.activeCallPiP
 import kotlinx.android.synthetic.main.fragment_room_detail.activeCallPiPWrap
 import kotlinx.android.synthetic.main.fragment_room_detail.activeCallView
@@ -210,6 +213,7 @@ import kotlinx.android.synthetic.main.fragment_room_detail.syncStateView
 import kotlinx.android.synthetic.main.merge_composer_layout.*
 import kotlinx.android.synthetic.main.merge_composer_layout.view.*
 import kotlinx.android.synthetic.main.merge_overlay_waiting_view.*
+import kotlinx.android.synthetic.main.view_file_icon.view.*
 import org.billcarsonfr.jsonviewer.JSonViewerDialog
 import org.commonmark.parser.Parser
 import timber.log.Timber
@@ -1424,6 +1428,10 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
         if (BuildConfig.IS_BATNA) {
             if ((messageContent as MessageAudioContent).body.contains(".aac")) {
                 onSaveActionClicked(EventSharedAction.Save(informationData.eventId, messageContent))
+                if (view is RelativeLayout){
+                    MediaPlayerBatna.fileImageView=view.messageFileIconView
+                }
+
             }
         }
     }

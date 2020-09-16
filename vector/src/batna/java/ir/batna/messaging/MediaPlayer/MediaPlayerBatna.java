@@ -30,6 +30,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
+import im.vector.riotx.R;
+
 public class MediaPlayerBatna {
     public static MediaPlayer mp;
     @SuppressLint("StaticFieldLeak")
@@ -46,6 +48,7 @@ public class MediaPlayerBatna {
     public static ImageView play;
     @SuppressLint("StaticFieldLeak")
     @Nullable
+    public static ImageView fileImageView;
     public static ImageView close;
     private static Handler myHandler = new Handler();
     private static boolean isRemainderVoice = true;
@@ -77,7 +80,8 @@ public class MediaPlayerBatna {
             assert seekBar != null;
             seekBar.setMax(mp.getDuration());
             myHandler.postDelayed(UpdateVoiceTime, 100);
-
+            assert fileImageView != null;
+            fileImageView.setImageResource(R.drawable.ic_pause);
             assert layout != null;
             layout.setVisibility(View.VISIBLE);
 
