@@ -16,6 +16,7 @@
 
 package im.vector.riotx.features.home.room.detail.timeline.item
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.Paint
 import android.view.View
@@ -31,6 +32,7 @@ import im.vector.riotx.BuildConfig
 import im.vector.riotx.R
 import im.vector.riotx.features.home.room.detail.timeline.helper.ContentDownloadStateTrackerBinder
 import im.vector.riotx.features.home.room.detail.timeline.helper.ContentUploadStateTrackerBinder
+import ir.batna.messaging.MediaPlayer.MediaPlayerBatna
 
 @EpoxyModelClass(layout = R.layout.item_timeline_event_base)
 abstract class MessageFileItem : AbsMessageItem<MessageFileItem.Holder>() {
@@ -60,6 +62,7 @@ abstract class MessageFileItem : AbsMessageItem<MessageFileItem.Holder>() {
     @EpoxyAttribute
     lateinit var contentDownloadStateTrackerBinder: ContentDownloadStateTrackerBinder
 
+    @SuppressLint("SetTextI18n")
     override fun bind(holder: Holder) {
         super.bind(holder)
         renderSendState(holder.fileLayout, holder.filenameView)
@@ -90,15 +93,14 @@ abstract class MessageFileItem : AbsMessageItem<MessageFileItem.Holder>() {
                 holder.fileDownloadProgress.progress = 0
             }
         }
-//        if (holder.filenameView.text.contains(".aac")){
-//            holder.fileImageView.setImageResource(R.drawable.play)
-//            holder.fileImageView.setOnClickListener {
-//                Timber.v("javaaad set on click"+mxcUrl)
-////                contentDownloadStateTrackerBinder.bind(mxcUrl, holder)
-//            }
-//        }
-//        holder.view.setOnClickListener(clickListener)
-
+        if (BuildConfig.IS_BATNA){
+            if (holder.filenameView.text.contains(".aac")) {
+                holder.fileImageView.setImageResource(R.drawable.ic_play_arrow)
+                if (MediaPlayerBatna.fileName==holder.filenameView.text && MediaPlayerBatna.mp.isPlaying){
+                    holder.fileImageView.setImageResource(R.drawable.ic_baseline_pause_24)
+                }
+            }
+        }
         holder.filenameView.setOnClickListener(attributes.itemClickListener)
         holder.filenameView.setOnLongClickListener(attributes.itemLongClickListener)
         holder.fileImageWrapper.setOnClickListener(attributes.itemClickListener)

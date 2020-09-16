@@ -49,6 +49,7 @@ public class MediaPlayerBatna {
     public static ImageView close;
     private static Handler myHandler = new Handler();
     private static boolean isRemainderVoice = true;
+    public static String fileName;
     private static Runnable UpdateVoiceTime = new Runnable() {
         public void run() {
             try {
@@ -71,6 +72,7 @@ public class MediaPlayerBatna {
             mp = null;
             mp = MediaPlayer.create(context, Uri.parse(file.getPath()));
             mp.start();
+            fileName=file.getName();
             isRemainderVoice = true;
             assert seekBar != null;
             seekBar.setMax(mp.getDuration());
