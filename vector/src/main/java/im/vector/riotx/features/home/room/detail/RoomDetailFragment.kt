@@ -329,7 +329,7 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
         MediaPlayerBatna.play=play
 
         val current = LocalDateTime.now()
-        val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss")
+        val formatter = DateTimeFormatter.ofPattern("yy-MM-dd  HH mm ss")
         val currentDate: String =  current.format(formatter)
         if (checkPermissions(PERMISSIONS_FOR_RECORD, this@RoomDetailFragment, AUDIO_CALL_PERMISSION_REQUEST_CODE)) {
             output = context?.filesDir?.absolutePath + "/recording"+currentDate+".aac"

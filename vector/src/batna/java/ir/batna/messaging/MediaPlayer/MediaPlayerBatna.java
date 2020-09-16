@@ -99,8 +99,7 @@ public class MediaPlayerBatna {
             public void onClick(View v) {
                 assert layout != null;
                 layout.setVisibility(View.GONE);
-                mp.release();
-                mp = null;
+                mp.stop();
             }
         });
         assert pause != null;
