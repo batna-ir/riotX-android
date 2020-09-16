@@ -49,6 +49,9 @@ public class MediaPlayerBatna {
     @SuppressLint("StaticFieldLeak")
     @Nullable
     public static ImageView fileImageView;
+    @SuppressLint("StaticFieldLeak")
+    public static ImageView previousFileImageView;
+    @SuppressLint("StaticFieldLeak")
     public static ImageView close;
     private static Handler myHandler = new Handler();
     private static boolean isRemainderVoice = true;
@@ -61,13 +64,16 @@ public class MediaPlayerBatna {
                 if (isRemainderVoice)
                     myHandler.postDelayed(this, 100);
             } catch (Exception e) {
-                isRemainderVoice=false;
+                isRemainderVoice = false;
             }
         }
     };
 
     public static void startMediaPlayer(File file, Context context) {
         try {
+            if (previousFileImageView != null) {
+                previousFileImageView.setImageResource(R.drawable.ic_play_arrow);
+            }
             assert pause != null;
             pause.setVisibility(View.VISIBLE);
             assert play != null;
@@ -75,7 +81,7 @@ public class MediaPlayerBatna {
             mp = null;
             mp = MediaPlayer.create(context, Uri.parse(file.getPath()));
             mp.start();
-            fileName=file.getName();
+            fileName = file.getName();
             isRemainderVoice = true;
             assert seekBar != null;
             seekBar.setMax(mp.getDuration());
@@ -114,12 +120,16 @@ public class MediaPlayerBatna {
         pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try{
                 mp.pause();
                 assert play != null;
                 play.setVisibility(View.VISIBLE);
                 pause.setVisibility(View.GONE);
                 assert fileImageView != null;
                 fileImageView.setImageResource(R.drawable.ic_play_arrow);
+                }catch (Exception ignored){
+
+                }
             }
         });
         assert play != null;
@@ -150,5 +160,6 @@ public class MediaPlayerBatna {
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
+        previousFileImageView = fileImageView;
     }
 }

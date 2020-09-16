@@ -100,7 +100,12 @@ abstract class MessageFileItem : AbsMessageItem<MessageFileItem.Holder>() {
                 holder.fileImageView.setImageResource(R.drawable.ic_play_arrow)
                 if (MediaPlayerBatna.fileName==holder.filenameView.text && MediaPlayerBatna.mp.isPlaying){
                     holder.fileImageView.setImageResource(R.drawable.ic_baseline_pause_24)
+                    MediaPlayerBatna.fileImageView=holder.fileImageView
                 }
+                if (MediaPlayerBatna.fileName==holder.filenameView.text){
+                    MediaPlayerBatna.fileImageView=holder.fileImageView
+                }
+                holder.filenameView.visibility=View.GONE
             }}catch (e:Exception){
             }
         }

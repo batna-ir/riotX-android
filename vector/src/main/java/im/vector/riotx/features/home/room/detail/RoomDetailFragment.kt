@@ -1426,12 +1426,15 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
             }
         }
         if (BuildConfig.IS_BATNA) {
+            try{
             if ((messageContent as MessageAudioContent).body.contains(".aac")) {
                 onSaveActionClicked(EventSharedAction.Save(informationData.eventId, messageContent))
                 if (view is RelativeLayout){
                     MediaPlayerBatna.fileImageView=view.messageFileIconView
                 }
 
+            }
+        }catch (e:Exception){
             }
         }
     }
