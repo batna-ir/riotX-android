@@ -407,7 +407,7 @@ private fun saveMediaLegacy(context: Context, mediaMimeType: String?, title: Str
             }
         } catch (error: Throwable) {
             GlobalScope.launch(Dispatchers.Main) {
-                context.toast(context.getString(R.string.error_saving_media_file))
+//                context.toast(context.getString(R.string.error_saving_media_file))
             }
         }
     }

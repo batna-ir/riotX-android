@@ -33,6 +33,7 @@ import im.vector.riotx.R
 import im.vector.riotx.features.home.room.detail.timeline.helper.ContentDownloadStateTrackerBinder
 import im.vector.riotx.features.home.room.detail.timeline.helper.ContentUploadStateTrackerBinder
 import ir.batna.messaging.MediaPlayer.MediaPlayerBatna
+import java.lang.Exception
 
 @EpoxyModelClass(layout = R.layout.item_timeline_event_base)
 abstract class MessageFileItem : AbsMessageItem<MessageFileItem.Holder>() {
@@ -94,11 +95,13 @@ abstract class MessageFileItem : AbsMessageItem<MessageFileItem.Holder>() {
             }
         }
         if (BuildConfig.IS_BATNA){
+            try{
             if (holder.filenameView.text.contains(".aac")) {
                 holder.fileImageView.setImageResource(R.drawable.ic_play_arrow)
                 if (MediaPlayerBatna.fileName==holder.filenameView.text && MediaPlayerBatna.mp.isPlaying){
                     holder.fileImageView.setImageResource(R.drawable.ic_baseline_pause_24)
                 }
+            }}catch (e:Exception){
             }
         }
         holder.filenameView.setOnClickListener(attributes.itemClickListener)

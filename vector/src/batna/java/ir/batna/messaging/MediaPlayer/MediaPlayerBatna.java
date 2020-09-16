@@ -89,7 +89,7 @@ public class MediaPlayerBatna {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     mp.release();
-                    mp = null;
+                    fileImageView.setImageResource(R.drawable.ic_play_arrow);
                     isRemainderVoice = false;
                     assert layout != null;
                     layout.setVisibility(View.GONE);
@@ -106,6 +106,8 @@ public class MediaPlayerBatna {
                 assert layout != null;
                 layout.setVisibility(View.GONE);
                 mp.stop();
+                assert fileImageView != null;
+                fileImageView.setImageResource(R.drawable.ic_play_arrow);
             }
         });
         assert pause != null;
@@ -116,6 +118,8 @@ public class MediaPlayerBatna {
                 assert play != null;
                 play.setVisibility(View.VISIBLE);
                 pause.setVisibility(View.GONE);
+                assert fileImageView != null;
+                fileImageView.setImageResource(R.drawable.ic_play_arrow);
             }
         });
         assert play != null;
@@ -125,6 +129,8 @@ public class MediaPlayerBatna {
                 mp.start();
                 pause.setVisibility(View.VISIBLE);
                 play.setVisibility(View.GONE);
+                assert fileImageView != null;
+                fileImageView.setImageResource(R.drawable.ic_pause);
             }
         });
         assert seekBar != null;
