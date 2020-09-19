@@ -29,6 +29,7 @@ import android.widget.SeekBar;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.util.Random;
 
 import im.vector.riotx.R;
 
@@ -55,7 +56,8 @@ public class MediaPlayerBatna {
     public static ImageView close;
     private static Handler myHandler = new Handler();
     private static boolean isRemainderVoice = true;
-    public static String fileName;
+    public static String fileNameIsPlay;
+    public static String fileNameIsClick;
     private static Runnable UpdateVoiceTime = new Runnable() {
         public void run() {
             try {
@@ -74,32 +76,33 @@ public class MediaPlayerBatna {
             if (previousFileImageView != null) {
                 previousFileImageView.setImageResource(R.drawable.ic_play_arrow);
             }
-            assert pause != null;
-            pause.setVisibility(View.VISIBLE);
-            assert play != null;
-            play.setVisibility(View.GONE);
             mp = null;
             mp = MediaPlayer.create(context, Uri.parse(file.getPath()));
             mp.start();
-            fileName = file.getName();
+            fileNameIsPlay = file.getName();
             isRemainderVoice = true;
             assert seekBar != null;
             seekBar.setMax(mp.getDuration());
             myHandler.postDelayed(UpdateVoiceTime, 100);
             assert fileImageView != null;
-            fileImageView.setImageResource(R.drawable.ic_pause);
+            if (mp.isPlaying()) {
+                assert pause != null;
+                pause.setVisibility(View.VISIBLE);
+                assert play != null;
+                play.setVisibility(View.GONE);
+                fileImageView.setImageResource(R.drawable.ic_pause);
+            }
             assert layout != null;
             layout.setVisibility(View.VISIBLE);
 
-            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    mp.release();
-                    fileImageView.setImageResource(R.drawable.ic_play_arrow);
-                    isRemainderVoice = false;
-                    assert layout != null;
-                    layout.setVisibility(View.GONE);
-                }
+            mp.setOnCompletionListener(mp -> {
+                mp.release();
+                fileImageView.setImageResource(R.drawable.ic_play_arrow);
+                isRemainderVoice = false;
+                assert layout != null;
+                layout.setVisibility(View.GONE);
+                Random r = new Random();
+                fileNameIsPlay = String.valueOf(r.nextInt() + r.nextDouble());
             });
         } catch (Exception e) {
             mp.release();
@@ -109,38 +112,39 @@ public class MediaPlayerBatna {
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                assert layout != null;
-                layout.setVisibility(View.GONE);
-                mp.stop();
-                assert fileImageView != null;
-                fileImageView.setImageResource(R.drawable.ic_play_arrow);
+                try {
+                    assert layout != null;
+                    layout.setVisibility(View.GONE);
+                    mp.stop();
+                    Random r = new Random();
+                    fileNameIsPlay = String.valueOf(r.nextInt() + r.nextDouble());
+                    assert fileImageView != null;
+                    fileImageView.setImageResource(R.drawable.ic_play_arrow);
+                } catch (Exception ignored) {
+
+                }
             }
         });
         assert pause != null;
         pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
-                mp.pause();
-                assert play != null;
-                play.setVisibility(View.VISIBLE);
-                pause.setVisibility(View.GONE);
-                assert fileImageView != null;
-                fileImageView.setImageResource(R.drawable.ic_play_arrow);
-                }catch (Exception ignored){
-
-                }
+                setPause();
             }
         });
         assert play != null;
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mp.start();
-                pause.setVisibility(View.VISIBLE);
-                play.setVisibility(View.GONE);
-                assert fileImageView != null;
-                fileImageView.setImageResource(R.drawable.ic_pause);
+                try {
+                    mp.start();
+                    pause.setVisibility(View.VISIBLE);
+                    play.setVisibility(View.GONE);
+                    assert fileImageView != null;
+                    fileImageView.setImageResource(R.drawable.ic_pause);
+                } catch (Exception ignore) {
+
+                }
             }
         });
         assert seekBar != null;
@@ -162,4 +166,33 @@ public class MediaPlayerBatna {
         });
         previousFileImageView = fileImageView;
     }
+
+    public static void setPause() {
+        try {
+            mp.pause();
+            assert play != null;
+            play.setVisibility(View.VISIBLE);
+            assert pause != null;
+            pause.setVisibility(View.GONE);
+            assert fileImageView != null;
+            fileImageView.setImageResource(R.drawable.ic_play_arrow);
+        } catch (Exception ignored) {
+
+        }
+    }
+
+    public static void setPlay() {
+        try {
+            mp.start();
+            assert pause != null;
+            pause.setVisibility(View.VISIBLE);
+            assert play != null;
+            play.setVisibility(View.GONE);
+            assert fileImageView != null;
+            fileImageView.setImageResource(R.drawable.ic_pause);
+        } catch (Exception ignore) {
+
+        }
+    }
+
 }

@@ -19,6 +19,8 @@ package im.vector.riotx.features.home.room.detail.timeline.helper
 
 import android.annotation.SuppressLint
 import android.view.View
+import im.vector.matrix.android.api.session.room.model.message.MessageAudioContent
+import im.vector.riotx.BuildConfig
 import im.vector.riotx.EmojiCompatFontProvider
 import im.vector.riotx.core.utils.DebouncedClickListener
 import im.vector.riotx.features.home.AvatarRenderer
@@ -26,6 +28,7 @@ import im.vector.riotx.features.home.room.detail.timeline.MessageColorProvider
 import im.vector.riotx.features.home.room.detail.timeline.TimelineEventController
 import im.vector.riotx.features.home.room.detail.timeline.item.AbsMessageItem
 import im.vector.riotx.features.home.room.detail.timeline.item.MessageInformationData
+import ir.batna.messaging.MediaPlayer.MediaPlayerBatna
 import javax.inject.Inject
 
 class MessageItemAttributesFactory @Inject constructor(
@@ -48,6 +51,15 @@ class MessageItemAttributesFactory @Inject constructor(
                 },
                 itemClickListener = DebouncedClickListener(View.OnClickListener { view ->
                     callback?.onEventCellClicked(informationData, messageContent, view)
+//                    view.messageFilenameView
+                    if (BuildConfig.IS_BATNA) {
+
+                        try {
+                            MediaPlayerBatna.fileNameIsClick = (messageContent as MessageAudioContent).body
+                        } catch (e: Exception) {
+
+                        }
+                    }
                 }),
                 memberClickListener = DebouncedClickListener(View.OnClickListener {
                     callback?.onMemberNameClicked(informationData)

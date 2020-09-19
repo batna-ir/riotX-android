@@ -1426,9 +1426,15 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
             }
         }
         if (BuildConfig.IS_BATNA) {
+            MediaPlayerBatna.fileNameIsClick=(messageContent as MessageAudioContent).body
             try{
-            if ((messageContent as MessageAudioContent).body.contains(".aac")) {
-                onSaveActionClicked(EventSharedAction.Save(informationData.eventId, messageContent))
+            if ((messageContent).body.contains(".aac")) {
+                if (MediaPlayerBatna.fileNameIsPlay != MediaPlayerBatna.fileNameIsClick){
+                onSaveActionClicked(EventSharedAction.Save(informationData.eventId, messageContent))}
+                else if(MediaPlayerBatna.mp.isPlaying)
+                    MediaPlayerBatna.setPause()
+                else if(!MediaPlayerBatna.mp.isPlaying)
+                    MediaPlayerBatna.setPlay()
                 if (view is RelativeLayout){
                     MediaPlayerBatna.fileImageView=view.messageFileIconView
                 }
