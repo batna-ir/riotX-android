@@ -97,6 +97,8 @@ abstract class MessageFileItem : AbsMessageItem<MessageFileItem.Holder>() {
             try{
             if (holder.filenameView.text.contains(".aac")) {
                 holder.fileImageView.setImageResource(R.drawable.ic_play_arrow)
+                holder.fileImageView.scaleY= 1.5F
+                holder.fileImageView.scaleX= 1.5F
                 if (MediaPlayerBatna.fileNameIsPlay==holder.filenameView.text && MediaPlayerBatna.mp.isPlaying){
                     holder.fileImageView.setImageResource(R.drawable.ic_baseline_pause_24)
                     MediaPlayerBatna.fileImageView=holder.fileImageView
@@ -104,7 +106,16 @@ abstract class MessageFileItem : AbsMessageItem<MessageFileItem.Holder>() {
                     MediaPlayerBatna.fileImageView=holder.fileImageView
                 }
                 holder.filenameView.visibility=View.GONE
-            }}catch (e:Exception){
+                if (attributes.informationData.sentByMe) {
+                    holder.layoutItemTimeLineBase.layoutDirection = View.LAYOUT_DIRECTION_RTL
+                    holder.memberNameView.visibility = View.GONE
+                    holder.viewStubContainer.setBackgroundResource(R.drawable.in_audio_message_shape)
+                } else {
+                    holder.layoutItemTimeLineBase.layoutDirection = View.LAYOUT_DIRECTION_LTR
+                    holder.viewStubContainer.setBackgroundResource(R.drawable.out_message_shape)
+                }
+            }
+            }catch (e:Exception){
             }
         }
         holder.filenameView.setOnClickListener(attributes.itemClickListener)
@@ -115,7 +126,7 @@ abstract class MessageFileItem : AbsMessageItem<MessageFileItem.Holder>() {
         /**
          * BATNA => Change layout direction and background via 'attributes.informationData.sentByMe'
          */
-        if (BuildConfig.IS_BATNA) {
+        if (BuildConfig.IS_BATNA && !holder.filenameView.text.contains(".aac")) {
             if (attributes.informationData.sentByMe) {
                 holder.layoutItemTimeLineBase.layoutDirection = View.LAYOUT_DIRECTION_RTL
                 holder.memberNameView.visibility = View.GONE
