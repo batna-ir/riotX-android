@@ -38,7 +38,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.annotation.DrawableRes
@@ -65,6 +64,7 @@ import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MvRx
 import com.airbnb.mvrx.Success
+import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
@@ -183,6 +183,8 @@ import im.vector.riotx.features.notifications.NotificationUtils
 import im.vector.riotx.features.permalink.NavigationInterceptor
 import im.vector.riotx.features.permalink.PermalinkHandler
 import im.vector.riotx.features.reactions.EmojiReactionPickerActivity
+import im.vector.riotx.features.roomprofile.settings.RoomSettingsViewModel
+import im.vector.riotx.features.roomprofile.settings.RoomSettingsViewState
 import im.vector.riotx.features.settings.VectorPreferences
 import im.vector.riotx.features.settings.VectorSettingsActivity
 import im.vector.riotx.features.share.SharedData
@@ -193,7 +195,6 @@ import io.reactivex.schedulers.Schedulers
 import ir.batna.messaging.MediaPlayer.MediaPlayerBatna
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.batna.fragment_room_detail.*
-import kotlinx.android.synthetic.batna.item_timeline_event_file_stub.view.*
 import kotlinx.android.synthetic.main.fragment_room_detail.activeCallPiP
 import kotlinx.android.synthetic.main.fragment_room_detail.activeCallPiPWrap
 import kotlinx.android.synthetic.main.fragment_room_detail.activeCallView
@@ -321,6 +322,8 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
     private var state: Boolean = false
     private var time = 0
     private var hintColor: ColorStateList? = null
+    private lateinit var roomSettingsViewState:RoomSettingsViewState
+    private lateinit var roomSettingsViewModel:RoomSettingsViewModel
 
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("LogNotTimber", "SimpleDateFormat")
@@ -331,7 +334,9 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
         MediaPlayerBatna.close=close
         MediaPlayerBatna.pause=pause
         MediaPlayerBatna.play=play
-
+         roomSettingsViewState = RoomSettingsViewState(roomDetailArgs.roomId,null,Uninitialized,false,null,
+                null,null,null,false,RoomSettingsViewState.ActionPermissions())
+         roomSettingsViewModel=RoomSettingsViewModel(roomSettingsViewState,this.session)
         val current = LocalDateTime.now()
         val formatter = DateTimeFormatter.ofPattern("yy-MM-dd  HH mm ss")
         val currentDate: String =  current.format(formatter)
@@ -397,6 +402,7 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
             mic.setOnTouchListener(object : View.OnTouchListener {
                 @SuppressLint("LogNotTimber", "ClickableViewAccessibility")
                 override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                    roomSettingsViewModel.handleEnableEncryption()
                     val micButtonSize = 0.85f
                     val action = event?.action
                     if (MotionEvent.ACTION_DOWN == action) {

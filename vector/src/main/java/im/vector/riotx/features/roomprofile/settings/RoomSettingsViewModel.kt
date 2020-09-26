@@ -164,7 +164,7 @@ class RoomSettingsViewModel @AssistedInject constructor(@Assisted initialState: 
                 )
     }
 
-    private fun handleEnableEncryption() {
+    fun handleEnableEncryption() {
         postLoading(true)
 
         room.enableEncryption(callback = object : MatrixCallback<Unit> {
