@@ -339,12 +339,7 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
          roomSettingsViewState = RoomSettingsViewState(roomDetailArgs.roomId,null,Uninitialized,false,null,
                 null,null,null,false,RoomSettingsViewState.ActionPermissions())
          roomSettingsViewModel=RoomSettingsViewModel(roomSettingsViewState,this.session)
-        val current = LocalDateTime.now()
-        val formatter = DateTimeFormatter.ofPattern("yy-MM-dd  HH mm ss")
-        val currentDate: String =  current.format(formatter)
-        if (checkPermissions(PERMISSIONS_FOR_RECORD, this@RoomDetailFragment, AUDIO_CALL_PERMISSION_REQUEST_CODE)) {
-            output = context?.filesDir?.absolutePath + "/recording"+currentDate+".aac"
-        }
+
         hintColor = composerEditText.hintTextColors
 
         sharedActionViewModel = activityViewModelProvider.get(MessageSharedActionViewModel::class.java)
@@ -425,7 +420,7 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
                     val action = event?.action
                     if (MotionEvent.ACTION_DOWN == action) {
                         if (checkPermissions(PERMISSIONS_FOR_RECORD, this@RoomDetailFragment, AUDIO_CALL_PERMISSION_REQUEST_CODE)) {
-                            output = context?.filesDir?.absolutePath + "/recording"+currentDate+".aac"
+                            output = context?.filesDir?.absolutePath + "/recording"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy-MM-dd HH mm ss"))+".aac"
                             actionUp = true;
                             time = 0
                             mHandler.postDelayed(mAction, 0);
