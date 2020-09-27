@@ -225,6 +225,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.properties.Delegates
 
 @Parcelize
 data class RoomDetailArgs(
@@ -324,6 +325,7 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
     private var hintColor: ColorStateList? = null
     private lateinit var roomSettingsViewState:RoomSettingsViewState
     private lateinit var roomSettingsViewModel:RoomSettingsViewModel
+    private var isEncryption by Delegates.notNull<Boolean>()
 
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("LogNotTimber", "SimpleDateFormat")
@@ -398,11 +400,27 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
             syncStateView.render(syncState)
         }
         if (BuildConfig.IS_BATNA) {
-
+            var bool :Boolean=true
             mic.setOnTouchListener(object : View.OnTouchListener {
                 @SuppressLint("LogNotTimber", "ClickableViewAccessibility")
                 override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-                    roomSettingsViewModel.handleEnableEncryption()
+
+                    if (!isEncryption && bool) {
+                        bool=false
+                        AlertDialog.Builder(requireActivity())
+                                .setTitle(R.string.room_settings_enable_encryption_dialog_title)
+                                .setMessage(R.string.room_settings_enable_encryption_dialog_content_for_voice)
+                                .setNegativeButton(R.string.cancel){ _, _ ->
+                                    bool=true
+                                    return@setNegativeButton
+                                }
+                                .setPositiveButton(R.string.room_settings_enable_encryption_dialog_submit) { _, _ ->
+                                    roomSettingsViewModel.handleEnableEncryption()
+                                }.setCancelable(false)
+                                .show()
+                        return false
+                    }
+                    if(isEncryption){
                     val micButtonSize = 0.85f
                     val action = event?.action
                     if (MotionEvent.ACTION_DOWN == action) {
@@ -430,6 +448,7 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
                             attachmentButton.visibility = VISIBLE
                             stopRecording()
                         }
+                    }
                     }
                     return true
                 }
@@ -1013,6 +1032,9 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
     override fun invalidate() = withState(roomDetailViewModel) { state ->
         invalidateOptionsMenu()
         val summary = state.asyncRoomSummary()
+        if (summary != null) {
+            isEncryption=summary.isEncrypted
+        }
         renderToolbar(summary, state.typingMessage)
         val inviter = state.asyncInviter()
         if (summary?.membership == Membership.JOIN) {
