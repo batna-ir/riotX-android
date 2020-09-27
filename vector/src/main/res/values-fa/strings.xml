@@ -14,6 +14,10 @@
     <string name="title_activity_member_details">جزئیات اعضا</string>
     <string name="title_activity_bug_report">گزارش اشکال</string>
     <string name="loading">در حال بارگذاری…</string>
+    <string name="room_settings_enable_encryption_dialog_submit">فعال سازی رمزگذاری</string>
+    <string name="room_settings_enable_encryption_dialog_title">رمزگذاری فعال شود؟</string>
+    <string name="room_settings_enable_encryption_dialog_content">پس از فعال شدن ، رمزگذاری برای یک اتاق غیرفعال نمی شود. پیام های ارسالی در یک اتاق رمزگذاری شده توسط سرور قابل مشاهده نیست و فقط توسط گفت وگو کنندگان قابل مشاهده است. فعال کردن رمزنگاری ممکن است از کار بسیاری از ربات ها و پل ها جلوگیری کند.</string>
+    <string name="room_settings_enable_encryption_dialog_content_for_voice">برای ارسال پیام صوتی باید رمزگذاری فعال شود پس از فعال شدن ، رمزگذاری برای یک اتاق غیرفعال نمی شود. پیام های ارسالی در یک اتاق رمزگذاری شده توسط سرور قابل مشاهده نیست و فقط توسط گفت وگو کنندگان قابل مشاهده است. فعال کردن رمزنگاری ممکن است از کار بسیاری از ربات ها و پل ها جلوگیری کند.</string>
 
     <string name="ok">باشه</string>
     <string name="cancel">لغو</string>
