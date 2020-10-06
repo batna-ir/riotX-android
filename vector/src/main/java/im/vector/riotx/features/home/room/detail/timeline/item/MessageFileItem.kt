@@ -19,12 +19,14 @@ package im.vector.riotx.features.home.room.detail.timeline.item
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.Paint
+import android.os.Build
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.DrawableRes
+import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
@@ -62,6 +64,7 @@ abstract class MessageFileItem : AbsMessageItem<MessageFileItem.Holder>() {
     @EpoxyAttribute
     lateinit var contentDownloadStateTrackerBinder: ContentDownloadStateTrackerBinder
 
+    @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
     @SuppressLint("SetTextI18n")
     override fun bind(holder: Holder) {
         super.bind(holder)

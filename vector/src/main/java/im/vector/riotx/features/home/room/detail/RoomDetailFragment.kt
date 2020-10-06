@@ -1434,38 +1434,38 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
                 roomDetailViewModel.handle(RoomDetailAction.ResumeVerification(informationData.eventId, null))
             }
             is MessageWithAttachmentContent      -> {
-                if(BuildConfig.IS_BATNA){
-                if(!(messageContent as MessageAudioContent).body.contains(".aac")){
-                val action = RoomDetailAction.DownloadOrOpen(informationData.eventId, messageContent)
-                roomDetailViewModel.handle(action)}
-                }
-                if(!BuildConfig.IS_BATNA){
+                if (BuildConfig.IS_BATNA) {
+                    if (!(messageContent as MessageAudioContent).body.contains(".aac")) {
                         val action = RoomDetailAction.DownloadOrOpen(informationData.eventId, messageContent)
                         roomDetailViewModel.handle(action)
+                    }
+                }
+                if (!BuildConfig.IS_BATNA) {
+                    val action = RoomDetailAction.DownloadOrOpen(informationData.eventId, messageContent)
+                    roomDetailViewModel.handle(action)
                 }
             }
             is EncryptedEventContent             -> {
                 roomDetailViewModel.handle(RoomDetailAction.TapOnFailedToDecrypt(informationData.eventId))
             }
         }
-        if (BuildConfig.IS_BATNA) {
-            MediaPlayerBatna.fileNameIsClick=(messageContent as MessageAudioContent).body
-            try{
-            if ((messageContent).body.contains(".aac")) {
-                if (MediaPlayerBatna.fileNameIsPlay != MediaPlayerBatna.fileNameIsClick){
-                onSaveActionClicked(EventSharedAction.Save(informationData.eventId, messageContent))}
-                else if(MediaPlayerBatna.mp.isPlaying)
+        if (BuildConfig.IS_BATNA && ((messageContent is MessageAudioContent))) {
+            if ((messageContent).body.contains(".aac")){
+            MediaPlayerBatna.fileNameIsClick = (messageContent).body
+            try {
+                if (MediaPlayerBatna.fileNameIsPlay != MediaPlayerBatna.fileNameIsClick) {
+                    onSaveActionClicked(EventSharedAction.Save(informationData.eventId, messageContent))
+                } else if (MediaPlayerBatna.mp.isPlaying)
                     MediaPlayerBatna.setPause()
-                else if(!MediaPlayerBatna.mp.isPlaying)
+                else if (!MediaPlayerBatna.mp.isPlaying)
                     MediaPlayerBatna.setPlay()
-                if (view is RelativeLayout){
-                    MediaPlayerBatna.fileImageView=view.messageFileIconView
+                if (view is RelativeLayout) {
+                    MediaPlayerBatna.fileImageView = view.messageFileIconView
                 }
-
-            }
-        }catch (e:Exception){
+            } catch (e: Exception) {
             }
         }
+    }
     }
 
     override fun onEventLongClicked(informationData: MessageInformationData, messageContent: Any?, view: View): Boolean {
