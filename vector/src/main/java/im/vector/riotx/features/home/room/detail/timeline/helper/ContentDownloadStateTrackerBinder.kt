@@ -20,6 +20,7 @@ import android.graphics.drawable.Drawable
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import im.vector.matrix.android.api.session.file.ContentDownloadStateTracker
+import im.vector.riotx.BuildConfig
 import im.vector.riotx.R
 import im.vector.riotx.core.di.ActiveSessionHolder
 import im.vector.riotx.core.di.ScreenScope
@@ -125,6 +126,7 @@ private class ContentDownloadUpdater(private val holder: MessageFileItem.Holder,
         stop()
         holder.fileDownloadProgress.isIndeterminate = false
         holder.fileDownloadProgress.progress = 100
-        holder.fileImageView.setImageResource(R.drawable.ic_paperclip)
+        if (BuildConfig.IS_BATNA && !holder.filenameView.text.contains(".aac"))
+            holder.fileImageView.setImageResource(R.drawable.ic_paperclip)
     }
 }

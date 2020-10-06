@@ -1434,8 +1434,8 @@ private const val REACTION_SELECT_REQUEST_CODE = 0
                 roomDetailViewModel.handle(RoomDetailAction.ResumeVerification(informationData.eventId, null))
             }
             is MessageWithAttachmentContent      -> {
-                if (BuildConfig.IS_BATNA) {
-                    if (!(messageContent as MessageAudioContent).body.contains(".aac")) {
+                if (BuildConfig.IS_BATNA && (messageContent !is MessageAudioContent)) {
+                    if (!(messageContent).body.contains(".aac")) {
                         val action = RoomDetailAction.DownloadOrOpen(informationData.eventId, messageContent)
                         roomDetailViewModel.handle(action)
                     }
